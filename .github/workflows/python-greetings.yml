@@ -82,6 +82,25 @@ jobs:
         with:
           working-dir: test-framework
           test-env: greetings_dev
+          
+      - name: Stop app after tests
+        shell: powershell
+        working-directory: greetings
+        run: |
+          echo "Stopping greetings-app-dev..."
+          try {
+            pm2 delete greetings-app-dev
+          } catch {
+            Write-Host "No PM2 app to stop"
+          }
+  
+          echo "Killing python..."
+          try {
+            Stop-Process -Name python -Force
+          } catch {
+            Write-Host "No python to kill"
+          }
+
 
   deploy-to-staging:
     needs: tests-on-dev
