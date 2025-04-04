@@ -13,9 +13,18 @@ jobs:
         shell: powershell
         run: |
           echo "Stopping ALL PM2 apps..."
-          pm2 delete all -ErrorAction SilentlyContinue
+          try {
+            pm2 delete all
+          } catch {
+            Write-Host "No PM2 apps running"
+          }
+      
           echo "Killing Python processes..."
-          Stop-Process -Name python -Force -ErrorAction SilentlyContinue
+          try {
+            Stop-Process -Name python -Force
+          } catch {
+            Write-Host "No python process running"
+          }
 
   
       - name: Prepare all required actions
