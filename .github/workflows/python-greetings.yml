@@ -9,19 +9,24 @@ jobs:
   install-pip-deps:
     runs-on: self-hosted
     steps:
+      - name: Stop PM2 app (ja vēl darbojas no iepriekšējā job)
+        shell: powershell
+        run: |
+          echo "Trying to stop greetings-app-dev..."
+          pm2 delete greetings-app-dev || echo "Already stopped or not found"
+  
       - name: Prepare all required actions
         uses: actions/checkout@v4
-
+  
       - name: Clone python-greetings repo
         uses: actions/checkout@v4
         with:
           repository: mtararujs/python-greetings
           path: greetings
-
+  
       - name: Install Python dependencies
         uses: ./.github/actions/install-deps
-        with:
-          working-dir: greetings
+
 
   deploy-to-dev:
     needs: install-pip-deps
