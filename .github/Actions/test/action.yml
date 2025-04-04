@@ -1,0 +1,27 @@
+name: Run Tests
+description: "Run test framework against environment"
+
+inputs:
+  working-dir:
+    description: "Path to the test framework directory"
+    required: true
+  test-env:
+    description: "Environment tag (e.g. greetings_dev)"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install dependencies
+      shell: powershell
+      working-directory: ${{ inputs.working-dir }}
+      run: |
+        echo "Installing Node.js dependencies..."
+        npm install
+
+    - name: Run tests
+      shell: powershell
+      working-directory: ${{ inputs.working-dir }}
+      run: |
+        echo "Running tests against environment ${{ inputs.test-env }}..."
+        npm run greetings ${{ inputs.test-env }}
