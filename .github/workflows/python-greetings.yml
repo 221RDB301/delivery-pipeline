@@ -24,19 +24,19 @@ jobs:
           working-dir: greetings
 
   deploy-to-dev:
-    needs: install-pip-deps
-    runs-on: self-hosted
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
-        with:
-          repository: mtararujs/python-greetings
-          path: greetings
-      - uses: ./.github/actions/deploy
-        with:
-          working-dir: greetings
-          env-name: dev
-          port: 7001
+  needs: install-pip-deps
+  runs-on: self-hosted
+  steps:
+    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
+      with:
+        repository: mtararujs/python-greetings
+        path: greetings
+    - uses: ./.github/actions/deploy
+      with:
+        environment: dev
+        port: 7001
+
 
   tests-on-dev:
     needs: deploy-to-dev
