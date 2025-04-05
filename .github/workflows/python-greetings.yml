@@ -41,6 +41,8 @@ jobs:
   tests-on-dev:
     needs: deploy-to-dev
     runs-on: self-hosted
+    env:
+      FLASK_DEBUG: "false"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/checkout@v4
