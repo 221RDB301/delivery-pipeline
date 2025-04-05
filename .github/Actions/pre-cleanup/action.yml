@@ -30,7 +30,7 @@ runs:
           } catch {
             Write-Host "Unable to delete greetings — renaming as fallback"
             $timestamp = Get-Date -Format yyyyMMddHHmmss
-            $lockedName = "greetings_locked_" + $timestamp
+            $lockedName = 'greetings_locked_' + $timestamp
             Rename-Item -Path $greetingsPath -NewName $lockedName
           }
         }
