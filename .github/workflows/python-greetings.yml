@@ -9,6 +9,10 @@ jobs:
   install-pip-deps:
     runs-on: self-hosted
     steps:
+
+      - name: Run pre-cleanup
+        uses: ./.github/actions/pre-cleanup
+        
       - name: Prepare all required actions
         uses: actions/checkout@v4
 
@@ -27,6 +31,9 @@ jobs:
     needs: install-pip-deps
     runs-on: self-hosted
     steps:
+      - name: Run pre-cleanup
+        uses: ./.github/actions/pre-cleanup
+        
       - uses: actions/checkout@v4
       - uses: actions/checkout@v4
         with:
@@ -44,6 +51,10 @@ jobs:
     env:
       FLASK_DEBUG: "false"
     steps:
+    
+      - name: Run pre-cleanup
+        uses: ./.github/actions/pre-cleanup
+        
       - uses: actions/checkout@v4
       - uses: actions/checkout@v4
         with:
@@ -70,6 +81,10 @@ jobs:
     needs: tests-on-dev
     runs-on: self-hosted
     steps:
+
+      - name: Run pre-cleanup
+        uses: ./.github/actions/pre-cleanup
+        
       - uses: actions/checkout@v4
       - uses: actions/checkout@v4
         with:
@@ -85,6 +100,10 @@ jobs:
     needs: deploy-to-staging
     runs-on: self-hosted
     steps:
+
+      - name: Run pre-cleanup
+        uses: ./.github/actions/pre-cleanup
+        
       - uses: actions/checkout@v4
       - uses: actions/checkout@v4
         with:
@@ -111,6 +130,10 @@ jobs:
     needs: tests-on-staging
     runs-on: self-hosted
     steps:
+
+      - name: Run pre-cleanup
+        uses: ./.github/actions/pre-cleanup
+        
       - uses: actions/checkout@v4
       - uses: actions/checkout@v4
         with:
@@ -126,6 +149,10 @@ jobs:
     needs: deploy-to-preprod
     runs-on: self-hosted
     steps:
+
+      - name: Run pre-cleanup
+        uses: ./.github/actions/pre-cleanup
+        
       - uses: actions/checkout@v4
       - uses: actions/checkout@v4
         with:
@@ -152,6 +179,10 @@ jobs:
     needs: tests-on-preprod
     runs-on: self-hosted
     steps:
+
+      - name: Run pre-cleanup
+        uses: ./.github/actions/pre-cleanup
+        
       - uses: actions/checkout@v4
       - uses: actions/checkout@v4
         with:
@@ -167,6 +198,10 @@ jobs:
     needs: deploy-to-prod
     runs-on: self-hosted
     steps:
+
+      - name: Run pre-cleanup
+        uses: ./.github/actions/pre-cleanup
+        
       - uses: actions/checkout@v4
       - uses: actions/checkout@v4
         with:
