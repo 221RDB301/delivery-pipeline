@@ -1,5 +1,6 @@
 name: Pre-cleanup PM2 and Python
 description: Stops PM2 and Python processes and deletes or renames the greetings folder if needed
+
 runs:
   using: "composite"
   steps:
@@ -29,6 +30,7 @@ runs:
           } catch {
             Write-Host "Unable to delete greetings — renaming as fallback"
             $timestamp = Get-Date -Format yyyyMMddHHmmss
-            Rename-Item -Path $greetingsPath -NewName ("greetings_locked_$timestamp")
+            $lockedName = "greetings_locked_" + $timestamp
+            Rename-Item -Path $greetingsPath -NewName $lockedName
           }
         }
