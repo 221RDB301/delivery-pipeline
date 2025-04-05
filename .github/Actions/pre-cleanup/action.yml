@@ -28,7 +28,7 @@ runs:
             Remove-Item -Path $greetingsPath -Recurse -Force -ErrorAction Stop
             Write-Host "greetings folder deleted"
           } catch {
-            Write-Host "Unable to delete greetings — renaming as fallback"
+            Write-Host "Unable to delete greetings - renaming as fallback"
             $timestamp = Get-Date -Format yyyyMMddHHmmss
             $lockedName = 'greetings_locked_' + $timestamp
             Rename-Item -Path $greetingsPath -NewName $lockedName
