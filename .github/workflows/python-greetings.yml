@@ -9,41 +9,19 @@ jobs:
   install-pip-deps:
     runs-on: self-hosted
     steps:
-      - name: Force stop PM2, Python and move 'greetings' folder
+      - name: Clone greetings to temp
+        uses: actions/checkout@v4
+        with:
+          repository: mtararujs/python-greetings
+          path: greetings_temp
+
+      - name: Replace greetings
         shell: powershell
         run: |
-          Write-Host "Stopping ALL PM2 apps..."
-          try {
-            pm2 delete all
-          } catch {
-            Write-Host "No PM2 apps running"
+          if (Test-Path greetings) {
+            Move-Item greetings "greetings_backup_$(Get-Date -Format yyyyMMddHHmmss)"
           }
-      
-          Write-Host "Stopping Python processes..."
-          try {
-            Stop-Process -Name python -Force
-          } catch {
-            Write-Host "No python process running"
-          }
-      
-          Start-Sleep -Seconds 3
-      
-          Write-Host "Attempting to MOVE locked greetings folder..."
-          $greetingsPath = "C:\Windows\System32\actions-runner\_work\delivery-pipeline\delivery-pipeline\greetings"
-          $backupPath = "C:\Windows\System32\actions-runner\_work\delivery-pipeline\delivery-pipeline\_greetings_old_$([DateTime]::Now.ToString('yyyyMMddHHmmss'))"
-          if (Test-Path $greetingsPath) {
-            try {
-              Move-Item -Path $greetingsPath -Destination $backupPath -Force
-              Write-Host "greetings folder MOVED to $backupPath"
-            } catch {
-              Write-Host "Could not move greetings folder. It may still be locked."
-            }
-          } else {
-            Write-Host "'greetings' folder does not exist."
-          }
-      
-          Start-Sleep -Seconds 3
-          exit 0
+          Move-Item greetings_temp greetings
 
   
       - name: Prepare all required actions
