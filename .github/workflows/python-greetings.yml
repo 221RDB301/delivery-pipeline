@@ -9,21 +9,36 @@ jobs:
   install-pip-deps:
     runs-on: self-hosted
     steps:
-      - name: Force stop PM2 and Python before install
+      - name: Force stop PM2, Python and unlock 'greetings' folder
         shell: powershell
         run: |
-          echo "Stopping ALL PM2 apps..."
+          Write-Host "Stopping ALL PM2 apps..."
           try {
             pm2 delete all
           } catch {
             Write-Host "No PM2 apps running"
           }
-      
-          echo "Killing Python processes..."
+  
+          Write-Host "Stopping Python processes..."
           try {
             Stop-Process -Name python -Force
           } catch {
             Write-Host "No python process running"
+          }
+  
+          Start-Sleep -Seconds 5
+  
+          Write-Host "Attempting to delete locked greetings folder..."
+          $greetingsPath = "C:\Windows\System32\actions-runner\_work\delivery-pipeline\delivery-pipeline\greetings"
+          if (Test-Path $greetingsPath) {
+            try {
+              Remove-Item -Path $greetingsPath -Recurse -Force -ErrorAction Stop
+              Write-Host "'greetings' folder deleted."
+            } catch {
+              Write-Host "Could not delete 'greetings' folder, still locked."
+            }
+          } else {
+            Write-Host "'greetings' folder does not exist."
           }
 
   
