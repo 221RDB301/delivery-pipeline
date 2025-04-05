@@ -33,7 +33,7 @@ jobs:
           if (Test-Path $greetingsPath) {
             $timeout = 10
             $waited = 0
-            while (Test-Path $greetingsPath -and $waited -lt $timeout) {
+            while ((Test-Path $greetingsPath) -and ($waited -lt $timeout)) {
               try {
                 Remove-Item -Path $greetingsPath -Recurse -Force -ErrorAction Stop
                 Write-Host "greetings folder removed after $waited sec."
