@@ -137,7 +137,7 @@ jobs:
         run: |
           echo "Restarting app for preprod..."
           $env:PORT=7003
-          pm2 start app.py --name greetings-app-preprod --interpreter python
+          pm2 start app.py --name greetings-app-preprod --interpreter python -f
           Start-Sleep -Seconds 5
       - uses: actions/checkout@v4
         with:
