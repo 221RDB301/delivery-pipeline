@@ -50,6 +50,9 @@ jobs:
           } else {
             Write-Host "'greetings' folder does not exist."
           }
+      
+          Write-Host "Waiting a few more seconds before checkout..."
+          Start-Sleep -Seconds 5
           exit 0
 
   
