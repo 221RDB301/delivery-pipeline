@@ -9,35 +9,19 @@ jobs:
   install-pip-deps:
     runs-on: self-hosted
     steps:
-      - name: Clone greetings to temp
-        uses: actions/checkout@v4
-        with:
-          repository: mtararujs/python-greetings
-          path: greetings_temp
-
-      - name: Replace greetings
-        shell: powershell
-        run: |
-          if (Test-Path greetings) {
-            Move-Item greetings "greetings_backup_$(Get-Date -Format yyyyMMddHHmmss)"
-          }
-          Move-Item greetings_temp greetings
-
-  
       - name: Prepare all required actions
         uses: actions/checkout@v4
-  
+
       - name: Clone python-greetings repo
         uses: actions/checkout@v4
         with:
           repository: mtararujs/python-greetings
           path: greetings
-  
+
       - name: Install Python dependencies
         uses: ./.github/actions/install-deps
         with:
           working-dir: greetings
-
 
   deploy-to-dev:
     needs: install-pip-deps
@@ -50,9 +34,9 @@ jobs:
           path: greetings
       - uses: ./.github/actions/deploy
         with:
-          environment: dev
+          working-dir: greetings
+          env-name: dev
           port: 7001
-
 
   tests-on-dev:
     needs: deploy-to-dev
@@ -79,25 +63,6 @@ jobs:
         with:
           working-dir: test-framework
           test-env: greetings_dev
-          
-      - name: Stop app after tests
-        shell: powershell
-        working-directory: greetings
-        run: |
-          echo "Stopping greetings-app-dev..."
-          try {
-            pm2 delete greetings-app-dev
-          } catch {
-            Write-Host "No PM2 app to stop"
-          }
-  
-          echo "Killing python..."
-          try {
-            Stop-Process -Name python -Force
-          } catch {
-            Write-Host "No python to kill"
-          }
-
 
   deploy-to-staging:
     needs: tests-on-dev
@@ -110,9 +75,9 @@ jobs:
           path: greetings
       - uses: ./.github/actions/deploy
         with:
-          environment: staging
+          working-dir: greetings
+          env-name: staging
           port: 7002
-
 
   tests-on-staging:
     needs: deploy-to-staging
@@ -151,9 +116,9 @@ jobs:
           path: greetings
       - uses: ./.github/actions/deploy
         with:
-          environment: preprod
+          working-dir: greetings
+          env-name: preprod
           port: 7003
-
 
   tests-on-preprod:
     needs: deploy-to-preprod
@@ -192,9 +157,9 @@ jobs:
           path: greetings
       - uses: ./.github/actions/deploy
         with:
-          environment: prod
+          working-dir: greetings
+          env-name: prod
           port: 7004
-
 
   tests-on-prod:
     needs: deploy-to-prod
