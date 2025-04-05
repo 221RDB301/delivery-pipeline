@@ -34,3 +34,4 @@ runs:
             Rename-Item -Path $greetingsPath -NewName $lockedName
           }
         }
+        exit 0
