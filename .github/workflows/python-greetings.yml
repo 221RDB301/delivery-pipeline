@@ -9,7 +9,7 @@ jobs:
   install-pip-deps:
     runs-on: self-hosted
     steps:
-      - name: Force stop PM2, Python and unlock 'greetings' folder
+      - name: Force stop PM2, Python and move 'greetings' folder
         shell: powershell
         run: |
           Write-Host "Stopping ALL PM2 apps..."
@@ -28,31 +28,21 @@ jobs:
       
           Start-Sleep -Seconds 3
       
-          Write-Host "Attempting to delete locked greetings folder..."
+          Write-Host "Attempting to MOVE locked greetings folder..."
           $greetingsPath = "C:\Windows\System32\actions-runner\_work\delivery-pipeline\delivery-pipeline\greetings"
+          $backupPath = "C:\Windows\System32\actions-runner\_work\delivery-pipeline\delivery-pipeline\_greetings_old_$([DateTime]::Now.ToString('yyyyMMddHHmmss'))"
           if (Test-Path $greetingsPath) {
-            $timeout = 10
-            $waited = 0
-            while ((Test-Path $greetingsPath) -and ($waited -lt $timeout)) {
-              try {
-                Remove-Item -Path $greetingsPath -Recurse -Force -ErrorAction Stop
-                Write-Host "greetings folder removed after $waited sec."
-                break
-              } catch {
-                Write-Host "Folder still locked. Waiting..."
-                Start-Sleep -Seconds 1
-                $waited++
-              }
-            }
-            if (Test-Path $greetingsPath) {
-              Write-Host "Could not delete 'greetings' folder after $timeout seconds."
+            try {
+              Move-Item -Path $greetingsPath -Destination $backupPath -Force
+              Write-Host "greetings folder MOVED to $backupPath"
+            } catch {
+              Write-Host "Could not move greetings folder. It may still be locked."
             }
           } else {
             Write-Host "'greetings' folder does not exist."
           }
       
-          Write-Host "Waiting a few more seconds before checkout..."
-          Start-Sleep -Seconds 5
+          Start-Sleep -Seconds 3
           exit 0
 
   
