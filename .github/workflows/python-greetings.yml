@@ -10,11 +10,11 @@ jobs:
     runs-on: self-hosted
     steps:
 
-      - name: Run pre-cleanup
-        uses: ./.github/actions/pre-cleanup
-        
       - name: Prepare all required actions
         uses: actions/checkout@v4
+
+      - name: Run pre-cleanup
+        uses: ./.github/actions/pre-cleanup
 
       - name: Clone python-greetings repo
         uses: actions/checkout@v4
