@@ -50,6 +50,7 @@ jobs:
           } else {
             Write-Host "'greetings' folder does not exist."
           }
+          exit 0
 
   
       - name: Prepare all required actions
