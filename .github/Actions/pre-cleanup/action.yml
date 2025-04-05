@@ -1,0 +1,33 @@
+name: Pre-cleanup PM2 and Python
+description: Stops PM2 and Python processes and deletes or renames the greetings folder if needed
+runs:
+  using: "composite"
+  steps:
+    - shell: powershell
+      run: |
+        Write-Host "Stopping PM2 processes..."
+        try {
+          pm2 delete all
+        } catch {
+          Write-Host "No PM2 processes"
+        }
+
+        Write-Host "Killing Python processes..."
+        try {
+          Stop-Process -Name python -Force
+        } catch {
+          Write-Host "No Python processes"
+        }
+
+        Start-Sleep -Seconds 5
+
+        $greetingsPath = "$PWD/greetings"
+        if (Test-Path $greetingsPath) {
+          try {
+            Remove-Item -Path $greetingsPath -Recurse -Force -ErrorAction Stop
+            Write-Host "greetings folder deleted"
+          } catch {
+            Write-Host "Unable to delete greetings — renaming as fallback"
+            Rename-Item -Path $greetingsPath -NewName "greetings_locked_$(Get-Date -Format yyyyMMddHHmmss)"
+          }
+        }
